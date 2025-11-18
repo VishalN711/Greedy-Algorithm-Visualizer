@@ -1,0 +1,29 @@
+{
+  "name": "greedy-algorithm-visualizer-final-fixed",
+  "version": "1.0.0",
+  "description": "Educational visualizer for Greedy Algorithms - Final Fixed Version",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "algorithms",
+    "visualization",
+    "greedy",
+    "kruskal",
+    "prim",
+    "dijkstra",
+    "education"
+  ],
+  "author": "Student Project",
+  "license": "MIT"
+}
