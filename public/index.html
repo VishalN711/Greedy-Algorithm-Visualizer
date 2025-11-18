@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greedy Algorithm Visualizer - FIXED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button id="theme-btn" aria-label="Toggle dark mode">🌙</button>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Greedy Algorithm Visualizer</h1>
+            <nav class="nav">
+                <button class="nav-btn active" data-algorithm="kruskal">Kruskal's Algorithm</button>
+                <button class="nav-btn" data-algorithm="prim">Prim's Algorithm</button>
+                <button class="nav-btn" data-algorithm="dijkstra">Dijkstra's Algorithm</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+
+            <!-- Algorithm Info Panel -->
+            <div class="info-panel">
+                <div class="info-content">
+                    <h2 id="algorithm-title">Kruskal's Algorithm</h2>
+                    <p id="algorithm-description">Finds the Minimum Spanning Tree by sorting edges and using Union-Find to avoid cycles.</p>
+                    <div class="complexity-info">
+                        <span class="complexity">Time: <span id="time-complexity">O(E log E)</span></span>
+                        <span class="complexity">Space: <span id="space-complexity">O(V)</span></span>
+                    </div>
+                </div>
+                <button class="help-btn" id="help-btn">Help</button>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="input-section">
+                    <h3>Graph Input</h3>
+                    <div class="input-controls">
+                        <button class="btn btn-secondary" id="sample-graph-btn">Load Sample Graph</button>
+                        <button class="btn btn-secondary" id="random-graph-btn">Generate Random Graph</button>
+                        <button class="btn btn-secondary" id="custom-graph-btn">Custom Graph</button>
+                    </div>
+
+                    <!-- Custom Graph Input -->
+                    <div class="custom-input" id="custom-input" style="display: none;">
+                        <h4>Custom Graph JSON</h4>
+                        <textarea id="graph-input" placeholder="Enter graph as JSON..."></textarea>
+                        <button class="btn btn-primary" id="load-graph-btn">Load Graph</button>
+                    </div>
+
+                    <!-- Algorithm-specific inputs -->
+                    <div class="algorithm-inputs">
+                        <div id="dijkstra-inputs" class="algo-input" style="display: none;">
+                            <div class="input-row">
+                                <label for="source-node">Source Node:</label>
+                                <select id="source-node">
+                                    <option value="">Select source...</option>
+                                </select>
+                            </div>
+                            <div class="input-row">
+                                <label for="target-node">Target Node (Optional):</label>
+                                <select id="target-node">
+                                    <option value="">All nodes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="prim-inputs" class="algo-input" style="display: none;">
+                            <div class="input-row">
+                                <label for="start-node">Start Node (Optional):</label>
+                                <select id="start-node">
+                                    <option value="">Auto select</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualization Controls -->
+                <div class="viz-controls">
+                    <h3>Visualization</h3>
+                    <div class="control-buttons">
+                        <button class="btn btn-primary" id="run-algorithm-btn" disabled>Run Algorithm</button>
+                        <button class="btn btn-secondary" id="step-btn" disabled>Next Step</button>
+                        <button class="btn btn-secondary" id="reset-btn" disabled>Reset</button>
+                    </div>
+
+                    <div class="speed-control">
+                        <label for="animation-speed">Animation Speed:</label>
+                        <input type="range" id="animation-speed" min="100" max="2000" value="800" step="100">
+                        <span id="speed-value">800ms</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Area -->
+            <div class="visualization-area">
+                <div class="viz-header">
+                    <h3>Graph Visualization</h3>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #10b981;"></div>
+                            <span>Selected/Accepted</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ef4444;"></div>
+                            <span>Rejected</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f59e0b;"></div>
+                            <span>Currently Processing</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #94a3b8;"></div>
+                            <span>Pending</span>
+                        </div>
+                    </div>
+                </div>
+
+                <canvas id="graph-canvas" width="800" height="500"></canvas>
+
+                <!-- Step Information -->
+                <div class="step-info">
+                    <div class="step-header">
+                        <h4 id="step-title">Step 0: Initialize</h4>
+                        <div class="step-counter">
+                            <span id="current-step">0</span> / <span id="total-steps">0</span>
+                        </div>
+                    </div>
+                    <p id="step-description">Ready to visualize algorithm...</p>
+
+                    <div class="algorithm-state" id="algorithm-state"></div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="results-panel" id="results-panel" style="display: none;">
+                <h3>Results</h3>
+                <div class="results-content" id="results-content"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Help Modal -->
+    <div class="modal" id="help-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>How to Use Greedy Algorithm Visualizer</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h4>Getting Started</h4>
+                    <ol>
+                        <li>Choose an algorithm from the navigation bar</li>
+                        <li>Load a sample graph or create your own</li>
+                        <li>Configure algorithm parameters if needed</li>
+                        <li>Run the visualization to see the algorithm in action</li>
+                    </ol>
+                </div>
+
+                <div class="help-section">
+                    <h4>Algorithms</h4>
+                    <div class="algorithm-help">
+                        <strong>Kruskal's Algorithm:</strong> Finds MST by sorting edges and avoiding cycles using Union-Find.
+                        <br><br>
+                        <strong>Prim's Algorithm:</strong> Builds MST by starting from a vertex and growing the tree.
+                        <br><br>
+                        <strong>Dijkstra's Algorithm:</strong> Finds shortest paths from a source vertex to all others.
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <h4>Graph Format</h4>
+                    <p>Custom graphs should be in JSON format:</p>
+                    <pre>{
+  "nodes": [
+    {"id": "A", "label": "Node A", "x": 100, "y": 100},
+    {"id": "B", "label": "Node B", "x": 200, "y": 150}
+  ],
+  "edges": [
+    {"id": "A-B", "from": "A", "to": "B", "weight": 5}
+  ]
+}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Made with ❤️ using Node.js and Algorithms | Educational Visualization Tool | FIXED VERSION</p>
+        </div>
+    </footer>
+
+    <script src="client.js"></script>
+</body>
+</html>
